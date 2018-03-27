@@ -5,17 +5,17 @@ package com.example.abautista.retrofitoauth.Model;
  */
 
 public class BalanceList {
-    String balance;
+   private float balance;
     private String key;
     private String name;
     private String message;
 
 
-    public String getBalance() {
+    public float getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(float balance) {
         this.balance = balance;
     }
 

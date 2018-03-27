@@ -34,6 +34,11 @@ public interface RetrofitOauth {
             @Field("client_id") String clientId ,
             @Field("client_secret") String clientSecret
             );
+
     @POST("v1/members/loyalty")
+    @Headers({"api_key:cinepolis_test_android",
+            "Content-Type:application/json"})
     Call<Model> getMembersLoyalty(@Header("Authorization") String credential, @Body  ModelLoyalty bodyMemberLoyalty);
+
+
 }

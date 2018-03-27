@@ -1,8 +1,11 @@
 package com.example.abautista.retrofitoauth;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.abautista.retrofitoauth.Model.Model;
 import com.example.abautista.retrofitoauth.Model.ModelLoyalty;
@@ -25,15 +28,23 @@ public class MainActivity extends AppCompatActivity {
      String grantType = "password";
      String clientId = "CinepolisAndroidMobile";
      String clientSecret = "129ed5aae0a74176b54dd597a47bfe63";
-
+    Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        callRetrofit();
+        btnLogin = (Button)findViewById(R.id.btnLogin);
 
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callRetrofit();
+            }
+        });
     }
+
 
     private void callRetrofit() {
         String endPoint = getString(R.string.host_oauth);
@@ -48,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<ModelOauth> call, Response<ModelOauth> response) {
                 Log.d("TAG", "RESPONSE "+response.body().getUsername());
 
-
-                callRetrofitLoyalty(token=response.body().getTokenType()+ " " + response.body().getAccessToken());
+               SecondActivity( token=response.body().getTokenType()+ " " + response.body().getAccessToken());
 
             }
             @Override
@@ -57,46 +67,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
     }
 
 
-    private void callRetrofitLoyalty(String s) {
-        String endPoint = getString(R.string.host);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(endPoint)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ModelLoyalty modelLoyalty = new ModelLoyalty();
-        modelLoyalty.setCardNumber("1303030317482433");
-        modelLoyalty.setCountryCode("MX");
-        modelLoyalty.setTransactionInclude(true);
-
-
-        Log.d("TAG", "callRetrofitLoyalty:"+ s);
-        RetrofitOauth sporaService = retrofit.create(RetrofitOauth.class);
-        sporaService.getMembersLoyalty(s,modelLoyalty).enqueue(new Callback<Model>() {
-            @Override
-            public void onResponse(Call<Model> call, Response<Model> response) {
-
-                if(response.isSuccessful()) {
-                    Log.d("TAG", "Loyalty" + response.body().getName());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Model> call, Throwable t) {
-                Log.e("TAG", "onFailure");
-
-            }
-        });
-
-
-
-    }
+public void SecondActivity ( String key){
+    Intent intent = new Intent(this,InfoActivity.class);
+    intent.putExtra("Token",key);
+    startActivity(intent);
+}
 
 
 
